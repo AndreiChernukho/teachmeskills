@@ -13,13 +13,13 @@ public class Task4 {
         System.out.println("Ввод второго числа ");
         int secondScan = console.nextInt();
         if (firstScan <= secondScan) {
-            start = firstScan;
+            start = firstScan+1;
             over = secondScan;
         } else {
-            start = secondScan;
+            start = secondScan+1;
             over = firstScan;
         }
-        for (int i = ++start; i < over; i++) {
+        for (int i = start; i < over; i++) {
             if (i % 3 == 0) {
                 summa += i;
             }
