@@ -14,35 +14,29 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         boolean isFirst = true;
-        String textAll = readFile(PATHREADFILE).toString();
+        BufferedReader reader;
+
         StringBuilder textForFirstUser = new StringBuilder();
         StringBuilder textForSecondUser = new StringBuilder();
-
-        String[] strings = textAll.split("\n");
-        for (String str : strings) {
-            if (str.startsWith(USER_FIRST)) {
+        reader = new BufferedReader(new FileReader(PATHREADFILE));
+        String line = reader.readLine();
+        while (line != null) {
+            if (line.startsWith(USER_FIRST)) {
                 isFirst = true;
-            } else if (str.startsWith(USER_SECOND)) {
+            } else if (line.startsWith(USER_SECOND)) {
                 isFirst = false;
             }
             if (isFirst) {
-                textForFirstUser.append(str).append("\n");
+                textForFirstUser.append(line).append("\n");
             } else {
-                textForSecondUser.append(str).append("\n");
+                textForSecondUser.append(line).append("\n");
             }
+            line = reader.readLine();
         }
+        reader.close();
+
         writeFile(textForFirstUser.toString(), PATHWRITEFILE);
         writeFile(textForSecondUser.toString(), PATHWRITEFILE2);
-    }
-
-    public static StringBuilder readFile(String path) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
-            while (bufferedReader.ready()) {
-                stringBuilder.append(bufferedReader.readLine()).append("\n");
-            }
-        }
-        return stringBuilder;
     }
 
     public static void writeFile(String text, String path) throws IOException {
