@@ -1,21 +1,19 @@
 package com.tms.lesson13.service;
 
+import com.tms.lesson13.config.JdbcConfig;
 import com.tms.lesson13.entity.People;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PeopleServiceImpl {
-    private Connection connection;
 
-    public PeopleServiceImpl(Connection connection) {
-        this.connection = connection;
-    }
+    static final String SELECT = "SELECT * FROM people";
+    static final String SELECT_WHERE = "SELECT * FROM people WHERE name = ?";
 
-    public void createTable()  {
-        Statement statement = null;
-        try {
-            statement = connection.createStatement();
+    public void createTable() {
+        try (Connection connection = JdbcConfig.getConnect(); Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS people ( " +
                     "id                      BIGSERIAL    NOT NULL PRIMARY KEY," +
                     "name                    VARCHAR(255)  NOT NULL," +
@@ -26,10 +24,9 @@ public class PeopleServiceImpl {
         }
     }
 
-    public void insertData(){
-        Statement statement = null;
-        try {
-            statement = connection.createStatement();
+    public void insertData() {
+
+        try (Connection connection = JdbcConfig.getConnect(); Statement statement = connection.createStatement()) {
             statement.executeUpdate("insert into people (name,sex, birthday)\n" +
                     "values\n" +
                     "('Vasya','male','2000-01-01'),\n" +
@@ -49,27 +46,25 @@ public class PeopleServiceImpl {
 
     public String getByName(String name) {
 
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM people WHERE name = ?");
+        try (PreparedStatement statement = JdbcConfig.getConnect().prepareStatement(SELECT_WHERE)) {
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-
             int id = resultSet.getInt(1);
             String sex = resultSet.getString(3);
             Date birthday = resultSet.getDate(4);
             return id + ", " + name + ", " + sex + ", " + birthday;
         } catch (SQLException exc) {
-            return "Name " + name +" not found";
+            return "Name " + name + " not found";
         }
     }
 
-    public ArrayList<People> getAllPeople() {
+    public List<People> getAllPeople() {
 
-        ArrayList<People> people = new ArrayList<People>();
-        try {
+        List<People> people = new ArrayList<People>();
+        try (Connection connection = JdbcConfig.getConnect()) {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM people");
+            ResultSet resultSet = statement.executeQuery(SELECT);
 
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
