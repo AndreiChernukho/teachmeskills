@@ -2,10 +2,10 @@ package com.tms.lesson11;
 
 import java.util.List;
 
-public class RemoveToCollection implements Runnable {
+public class Decrease implements Runnable {
     List<Integer> list;
 
-    public RemoveToCollection(List<Integer> list) {
+    public Decrease(List<Integer> list) {
         this.list = list;
     }
 

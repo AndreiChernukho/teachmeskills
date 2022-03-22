@@ -2,10 +2,10 @@ package com.tms.lesson11;
 
 import java.util.List;
 
-public class AddToCollection implements Runnable {
+public class Increasing implements Runnable {
     List<Integer> list;
 
-    public AddToCollection(List<Integer> list) {
+    public Increasing(List<Integer> list) {
         this.list = list;
     }
 
